@@ -215,11 +215,12 @@ FROM products
 GROUP BY category
 ORDER BY total_revenue DESC
 LIMIT 1;
-```IT 1;
+```
 
 ---
 
-## 📌 DMart Grocery Sales Dashboard 
+## 📌 DMart Grocery Sales Dashboard
+```sql
 
 <img width="1307" height="732" alt="DMart Dashboard" src="https://github.com/user-attachments/assets/b93dce37-4945-489c-b801-073769abf20a" />
 
