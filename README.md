@@ -220,8 +220,7 @@ LIMIT 1;
 ---
 
 ## 📌 DMart Grocery Sales Dashboard
-```sql
 
-<img width="1307" height="732" alt="DMart Dashboard" src="https://github.com/user-attachments/assets/b93dce37-4945-489c-b801-073769abf20a" />
+<img width="1307" height="732" alt="DMart Dashboard" src="https://github.com/user-attachments/assets/44f81c62-af66-4993-90cf-6dd59d7cba97" />
 
 ---
