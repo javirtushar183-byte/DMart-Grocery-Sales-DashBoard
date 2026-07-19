@@ -20,13 +20,10 @@ The goal is to perform SQL-based analysis and build an interactive Power BI dash
 ```sql
 CREATE DATABASE RetailStore;
 USE RetailStore;
+SELECT * FROM products;
 ```
 
 ---
-SELECT * FROM products;
-
-# 📊 SQL Analysis Performed
-
 ## 1️⃣ Products with Discounted Price < 500
 **Business Requirement:** Identify low-cost products to target price-sensitive customers and improve sales volume.
 ```sql
