@@ -20,82 +20,121 @@ The goal is to perform SQL-based analysis and build an interactive Power BI dash
 ```sql
 CREATE DATABASE RetailStore;
 USE RetailStore;
+```
 
+---
 SELECT * FROM products;
 
-## 📊 SQL Analysis with Business Requirements
+# 📊 SQL Analysis Performed
 
--- 1️⃣ Products with Discounted Price < 500  
--- Business Requirement: Identify low-cost products to target price-sensitive customers and improve sales volume.
+## 1️⃣ Products with Discounted Price < 500
+**Business Requirement:** Identify low-cost products to target price-sensitive customers and improve sales volume.
+```sql
 CREATE VIEW Products_Under_500 AS
 SELECT name
 FROM products
 WHERE discounted_price < 500;
+```
 
--- 2️⃣ Nike Products Sorted by Price (High → Low)  
--- Business Requirement: Analyze premium pricing strategy of Nike products.
+---
+
+## 2️⃣ Nike Products Sorted by Price (High → Low)
+**Business Requirement:** Analyze premium pricing strategy of Nike products.
+```sql
 CREATE VIEW Nike_Products_Sorted AS
 SELECT name, brand, price
 FROM products
 WHERE brand = 'Nike'
 ORDER BY price DESC;
+```
 
--- 3️⃣ Selected Columns (Name, Price, Discounted Price)  
--- Business Requirement: Provide a simplified pricing view for reporting and dashboards.
+---
+
+## 3️⃣ Selected Columns (Name, Price, Discounted Price)
+**Business Requirement:** Provide a simplified pricing view for reporting and dashboards.
+```sql
 CREATE VIEW Product_Pricing_View AS
 SELECT name, price, discounted_price
 FROM products;
+```
 
--- 4️⃣ Total Products per Category  
--- Business Requirement: Understand product distribution across categories for inventory planning.
+---
+
+## 4️⃣ Total Products per Category
+**Business Requirement:** Understand product distribution across categories for inventory planning.
+```sql
 CREATE VIEW Products_Per_Category AS
 SELECT category, COUNT(*) AS total_products
 FROM products
 GROUP BY category;
+```
 
--- 5️⃣ Average Discounted Price per Brand  
--- Business Requirement: Compare brand pricing strategies and positioning.
+---
+
+## 5️⃣ Average Discounted Price per Brand
+**Business Requirement:** Compare brand pricing strategies and positioning.
+```sql
 CREATE VIEW Avg_Discounted_Price_Brand AS
 SELECT brand, AVG(discounted_price) AS avg_discounted_price
 FROM products
 GROUP BY brand;
+```
 
--- 6️⃣ Total Quantity per Sub-Category  
--- Business Requirement: Identify high-stock areas to manage inventory efficiently.
+---
+
+## 6️⃣ Total Quantity per Sub-Category
+**Business Requirement:** Identify high-stock areas to manage inventory efficiently.
+```sql
 CREATE VIEW Quantity_By_SubCategory AS
 SELECT sub_category,
        SUM(CAST(REGEXP_REPLACE(quantity, '[^0-9]', '', 'g') AS INT)) AS total_quantity_available
 FROM products
 GROUP BY sub_category
 ORDER BY total_quantity_available DESC;
+```
 
--- 7️⃣ Discount Percentage per Product  
--- Business Requirement: Evaluate discount effectiveness across products.
+---
+
+## 7️⃣ Discount Percentage per Product
+**Business Requirement:** Evaluate discount effectiveness across products.
+```sql
 CREATE VIEW Discount_Percentage AS
 SELECT name,
        price,
        discounted_price,
        ROUND(((price - discounted_price) * 100.0 / NULLIF(price, 0)), 2) AS discount_percentage
 FROM products;
+```
 
--- 8️⃣ Products with Discount > 1000  
--- Business Requirement: Identify heavily discounted products for promotional analysis.
+---
+
+## 8️⃣ Products with Discount > 1000
+**Business Requirement:** Identify heavily discounted products for promotional analysis.
+```sql
 CREATE VIEW High_Discount_Products AS
 SELECT name, price, discounted_price
 FROM products
 WHERE (price - discounted_price) > 1000;
+```
 
--- 9️⃣ Top 5 Products by Discount %  
--- Business Requirement: Highlight best deals to attract customers.
+---
+
+## 9️⃣ Top 5 Products by Discount %
+**Business Requirement:** Highlight best deals to attract customers.
+```sql
 CREATE VIEW Top_Discount_Products AS
 SELECT name,
        ROUND(((price - discounted_price) * 100.0 / NULLIF(price, 0)), 2) AS discount_percentage
 FROM products
 ORDER BY discount_percentage DESC
 LIMIT 5;
+```
 
--- 🔟 Brand with Highest Number of Products  
--- Business Requirement: Identify dominant brands in the inventory.
+---
+
+## 🔟 Brand with Highest Number of Products
+**Business Requirement:** Identify dominant brands in the inventory.
+```sql
 CREATE VIEW Top_Brand AS
 SELECT brand, COUNT(*) AS total_products
 FROM products
@@ -103,9 +142,13 @@ WHERE brand IS NOT NULL
 GROUP BY brand
 ORDER BY total_products DESC
 LIMIT 1;
+```
 
--- 1️⃣1️⃣ Category with Highest Quantity  
--- Business Requirement: Find categories with maximum stock for supply chain planning.
+---
+
+## 1️⃣1️⃣ Category with Highest Quantity
+**Business Requirement:** Find categories with maximum stock for supply chain planning.
+```sql
 CREATE VIEW Top_Category_By_Quantity AS
 SELECT category,
        SUM(CAST(REGEXP_REPLACE(quantity, '[^0-9]', '', 'g') AS INT)) AS total_quantity
@@ -113,16 +156,24 @@ FROM products
 GROUP BY category
 ORDER BY total_quantity DESC
 LIMIT 1;
+```
 
--- 1️⃣2️⃣ Products with 'USA' in Description  
--- Business Requirement: Identify products associated with specific regions or origin.
+---
+
+## 1️⃣2️⃣ Products with 'USA' in Description
+**Business Requirement:** Identify products associated with specific regions or origin.
+```sql
 CREATE VIEW USA_Products AS
 SELECT name
 FROM products
 WHERE description ILIKE '%usa%';
+```
 
--- 1️⃣3️⃣ Rank Products within Category  
--- Business Requirement: Rank products to support pricing and recommendation strategies.
+---
+
+## 1️⃣3️⃣ Rank Products within Category
+**Business Requirement:** Rank products to support pricing and recommendation strategies.
+```sql
 CREATE VIEW Product_Ranking AS
 SELECT name,
        category,
@@ -130,9 +181,13 @@ SELECT name,
        discounted_price,
        ROW_NUMBER() OVER (PARTITION BY category ORDER BY discounted_price ASC) AS rank_in_category
 FROM products;
+```
 
--- 1️⃣4️⃣ Top 3 Expensive Products per Category  
--- Business Requirement: Identify premium products within each category.
+---
+
+## 1️⃣4️⃣ Top 3 Expensive Products per Category
+**Business Requirement:** Identify premium products within each category.
+```sql
 CREATE VIEW Top_Expensive_Products AS
 SELECT name, category, price
 FROM (
@@ -143,9 +198,13 @@ FROM (
     FROM products
 ) t
 WHERE rn <= 3;
+```
 
--- 1️⃣5️⃣ Highest Revenue Generating Category  
--- Business Requirement: Identify top revenue-driving category for strategic focus.
+---
+
+## 1️⃣5️⃣ Highest Revenue Generating Category
+**Business Requirement:** Identify top revenue-driving category for strategic focus.
+```sql
 CREATE VIEW Top_Revenue_Category AS
 SELECT category,
        SUM(
@@ -159,3 +218,4 @@ FROM products
 GROUP BY category
 ORDER BY total_revenue DESC
 LIMIT 1;
+```IT 1;
